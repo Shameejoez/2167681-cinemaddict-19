@@ -78,7 +78,7 @@ export default class FilmsPopupPresenter {
       this.#mainBody.classList.remove('hide-overflow');
       this.#mainBody.removeChild(this.#popupFilmComponent.element);
       document.removeEventListener('keydown', this.onEscKeyClosed);
-      this.popupStatus = ACTIVATE_MODE[1];
+
     }
 
   };

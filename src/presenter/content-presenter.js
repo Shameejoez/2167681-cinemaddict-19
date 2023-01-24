@@ -55,15 +55,8 @@ export default class ContentPresenter {
       changeFavorite: this.#changeFavorite,
       changeAlredyWatched: this.#changeAlredyWatched,
     });
-    this.#popupStatus = this.#filmsPopupPresenter.popupStatus;
+   // this.#popupStatus = this.#filmsPopupPresenter.popupStatus;
     this.#filmsPopupPresenter.init(card);
-    this.#popupPresenterMap.set(card.id, this.#filmsPopupPresenter);
-    if (this.#popupPresenterMap.size >= 1) {
-      this.#popupPresenterMap.clear();
-      this.#popupPresenterMap.set(card.id, this.#filmsPopupPresenter);
-    } else {
-      this.#popupPresenterMap.set(card.id, this.#filmsPopupPresenter);
-    }
   };
 
 
@@ -147,8 +140,8 @@ export default class ContentPresenter {
     this.#cardFilms = updateItem(this.#cardFilms, updateFilm);
     this.#filmCardPresenters.get(updateFilm.id).init(updateFilm);
 
-    if (this.#popupStatus === ACTIVATE_MODE[0]) {
-      this.#popupPresenterMap.get(updateFilm.id).init(updateFilm);
+    if (this.#filmCardPresenter) {
+      this.#filmCardPresenter.init(updateFilm);
 
     }
   };

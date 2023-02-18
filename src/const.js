@@ -33,7 +33,7 @@ const DATE_FORMATS = {
   RELEASE:'D MMMM YYYY',
   DURATION_M: ' mm[m]',
   DURATION_H_M: 'H[h] mm[m]',
-  COMMENT: 'D MMMM YYYY HH:mm',
+  COMMENT: 'MM/DD/YYYY HH:mm',
 };
 
 const NUMBER_TO_COMPARE = '0 1 0';

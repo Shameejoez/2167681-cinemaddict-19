@@ -33,7 +33,6 @@ const createNewCardFilmTemplate = (state) => {
 };
 
 export default class NewCardFilmView extends AbstractStatefulView {
-  #card = null;
   #openPopup = null;
   #onChangeWatchlist = null;
   #onChangeFavorite = null;
@@ -42,7 +41,6 @@ export default class NewCardFilmView extends AbstractStatefulView {
 
   constructor({card, onClick, changeWatchlist, changeFavorite, changeAlredyWatched}) {
     super();
-    this.#card = card;
     this.#openPopup = onClick;
 
     this._setState(card);
@@ -52,6 +50,7 @@ export default class NewCardFilmView extends AbstractStatefulView {
     this.#onChangeWatchlist = changeWatchlist;
     this.#onChangeFavorite = changeFavorite;
     this.#onChangeAlreadyWatched = changeAlredyWatched;
+
 
     this.element.querySelector('.film-card__controls').addEventListener('click', (evt) => {
       if (evt.target.closest('.film-card__controls-item')) {

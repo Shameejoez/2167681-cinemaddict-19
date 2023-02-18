@@ -410,6 +410,17 @@ button {
   width: 0;
 }
 
+.tester {
+	border-left: solid 1px var(--outline-color);
+	bottom: 20px;
+	content: '';
+	height: calc(100% - 20px * 2);
+	left: calc(-1 * var(--horizontal-gap) * 1.5);
+	position: absolute;
+	top: 20px;
+	width: 0;
+ }
+
 .films-list--extra .films-list__container {
   padding: var(--vertical-gap) 40px;
 }

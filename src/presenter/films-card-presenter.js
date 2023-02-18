@@ -13,13 +13,11 @@ export default class FilmsCardPresenter {
   #onChangeWatchlist = null;
   #onChangeFavorite = null;
   #onChangeAlredyWatched = null;
-  #popupPresenterMap = new Map();
   #popUpPresenter = null;
-  #mainBody = null;
   #filmsCommentsModel = null;
 
   constructor ({cardsContainer, mainContainersComponent, loadMoreButtonClickHandler, popUpPresenter,
-    changeWatchlist, changeFavorite, changeAlredyWatched, mainBody, filmsCommentsModel}) {
+    changeWatchlist, changeFavorite, changeAlredyWatched, filmsCommentsModel}) {
     this.#cardsContainer = cardsContainer;
     this.#mainContainersComponent = mainContainersComponent;
     this.#loadMoreButtonClickHandler = loadMoreButtonClickHandler;
@@ -27,7 +25,6 @@ export default class FilmsCardPresenter {
     this.#onChangeWatchlist = changeWatchlist;
     this.#onChangeFavorite = changeFavorite;
     this.#onChangeAlredyWatched = changeAlredyWatched;
-    this.#mainBody = mainBody;
     this.#filmsCommentsModel = filmsCommentsModel;
 
   }
@@ -37,18 +34,7 @@ export default class FilmsCardPresenter {
     this.#cardsModels = cards;
     const prevCardFilmComponent = this.#cardFilmComponent;
 
-    this.#cardFilmComponent = new NewCardFilmView({
-      card: this.#cardsModels,
-      onClick: () => {
-
-        this.#renderPopup(this.#cardsModels);
-      },
-      changeWatchlist: this.#onChangeWatchlist,
-      changeFavorite: this.#onChangeFavorite,
-      changeAlredyWatched: this.#onChangeAlredyWatched,
-      comments:this.#filmsCommentsModel.comments,
-
-    });
+    this.#renderFilmComponet(this.#cardsModels);
 
     if (prevCardFilmComponent === null) {
       render(this.#cardFilmComponent, this.#cardsContainer);
@@ -62,6 +48,31 @@ export default class FilmsCardPresenter {
 
     remove(prevCardFilmComponent);
   }
+
+  #renderFilmComponet(cardsModel) {
+    this.#cardFilmComponent = new NewCardFilmView({
+      card: cardsModel,
+      onClick: () => {
+
+        this.#renderPopup(cardsModel);
+      },
+      changeWatchlist: this.#onChangeWatchlist,
+      changeFavorite: this.#onChangeFavorite,
+      changeAlredyWatched: this.#onChangeAlredyWatched,
+      comments:this.#filmsCommentsModel.comments,
+
+    });
+  }
+  /*  ПОКАЗ САМЫХ КОММЕНТИРУЕМЫХ И САМЫХ РЕЙТИНГОВЫХ ФИЛЬМОВ КАЖДЫЙ БЛОК СОСТОИТ ИЗ 2 КАРТОЧЕК С ФИЛЬМАМИ
+В СЛУЧАЕ ЕСЛИ В МОДЕЛИ ТОПОВЫЙ РЕЙТИНГ БОЛЬШЕ ДВУЙХ, ТОГДА ВЫБОР КАРТОЧКИ ДОЛЖЕН БЫТЬ РАДОМНЫЙ
+
+  renderMostComment(card) {
+
+  }
+
+  renderTopRate () {
+
+  }  */
 
   destroy() {
     remove(this.#cardFilmComponent);

@@ -26,7 +26,6 @@ export default class FilmsPopupPresenter {
   }
 
   init(card) {
-
     const prevPopupFilmComponent = this.#popupFilmComponent;
 
 
@@ -54,7 +53,7 @@ export default class FilmsPopupPresenter {
     this.isOpen = true;
     if (this.#mainBody.contains(prevPopupFilmComponent.element)) {
       replace( this.#popupFilmComponent, prevPopupFilmComponent);
-      this.#popupFilmComponent.saveScroll(card.scrollPosition);
+      this.#popupFilmComponent.saveScroll();
     }
 
   }

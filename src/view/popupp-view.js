@@ -54,7 +54,7 @@ const createNewPopuppTemplate = (state) => {
 		<div class="film-details__poster">
 		  <img class="film-details__poster-img" src="${filmInfo.poster}" alt="">
 
-		  <p class="film-details__age">${filmInfo.ageRating}</p>
+		  <p class="film-details__age">+${filmInfo.ageRating}</p>
 		</div>
 
 		<div class="film-details__info">
@@ -173,6 +173,7 @@ export default class NewPopuppView extends AbstractStatefulView {
     deleteComment, addComment}) {
     super();
     this._setState(NewPopuppView.parseCardToState(card, filmsCommentsModel.comments, this._state));
+
     this.#btnClosedClick = onBtnClick;
     this.#onChangeWatchlist = changeWatchlist;
     this.#onChangeFavorite = changeFavorite;
@@ -180,7 +181,8 @@ export default class NewPopuppView extends AbstractStatefulView {
     this.#deleteComment = deleteComment;
     this._restoreHandlers();
     this.#addComment = addComment;
-
+    this.saveScroll();
+    console.log(this._state);
 
   }
 
@@ -192,7 +194,7 @@ export default class NewPopuppView extends AbstractStatefulView {
       isDeleting: false,
       currentDataset: '',
       emotion: state?.emotion ?? 0,
-      scrollPosition: state?.scrollPosition ?? 0,
+      scrollPosition: card.scrollPosition ? card.scrollPosition : 0,
       comment: '',
       comments: comments,
       idToError: state?.idToError ?? 0
@@ -253,6 +255,16 @@ export default class NewPopuppView extends AbstractStatefulView {
     }
   };
 
+  update (card) {
+    this.updateElement({...this._state,
+      comments: card.comments,
+      filmInfo: card.filmInfo,
+      scrollPosition: card.scrollPosition,
+      id: card.id,
+      userDetails: card.userDetails
+    });
+  }
+
   // обработчики событий
   _restoreHandlers() {
     this.element.querySelector('.film-details__new-comment').addEventListener('click', this.emotionChangeHandler);
@@ -285,11 +297,15 @@ export default class NewPopuppView extends AbstractStatefulView {
   // добавление комментария
   #addCommentHandler = (evt) => {
     const textarea = document.querySelector('.film-details__comment-input');
+
     if(evt.ctrlKey && evt.keyCode === 13 || evt.commandKey && evt.keyCode === 13) {
       evt.preventDefault();
       this.updateElement({...this._state, currentDataset: evt.target.dataset.textarea});
+      if (this._state.emotion === 0) {
+        return;
+      }
       this.#addComment({
-        comment: textarea.value,
+        comment: he.encode(textarea.value),
         emotion: this._state.emotion,
         film: NewPopuppView.parseStateToCard(this._state),
         idToError: evt.target.id,

@@ -1,5 +1,5 @@
 import {render, RenderPosition, remove} from '../framework/render.js';
-import { sortRating, sortDate} from '../utils/common.js';
+import { sortRating, sortDate,} from '../utils/common.js';
 import NewFilmsMainContainerView from '../view/films-main-container-view.js';
 import NewMainContainersComponentView from '../view/main-containers-component-view.js';
 import NewCardsFilmContainerView from '../view/cards-film-container-view.js';
@@ -12,6 +12,7 @@ import {FilterType, SortMode, UpdateType, UserAction} from '../const.js';
 import {filter} from '../utils/filters.js';
 import NewUserRangView from '../view/user-rang-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+import ExtraFilmsView from '../view/extra-films-view.js';
 
 const FILMS_COUNT_PER_STEP = 5;
 
@@ -40,6 +41,7 @@ export default class ContentPresenter {
   #filterFilmModel = null;
   #isLoading = true;
   #filmsCommentsModel = null;
+  #extraFilmsContainer = null;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT,
@@ -53,19 +55,17 @@ export default class ContentPresenter {
     this.#mainBody = mainBody;
     this.#filterFilmModel = filterFilmModel;
     this.#filmsCommentsModel = filmsCommentsModel;
-
     this.#filmInfoModel.addObserver(this.#handleModeEvent);
     this.#filterFilmModel.addObserver(this.#handleModeEvent);
     this.#filmsCommentsModel.addObserver(this.#handleModeEvent);
+
   }
 
 
   get films () {
     const filterType = this.#filterFilmModel.filter;
     const films = this.#filmInfoModel.getCards();
-
     const filteredFilms = filter[filterType](films);
-
     switch(this.#currentSortType) {
       case SortMode.BY_DATE:
         return filteredFilms.sort(sortDate);
@@ -79,6 +79,7 @@ export default class ContentPresenter {
 
   init() {
     this.#renderMainContainer();
+
   }
 
   //отрисовка главного контайнера
@@ -89,7 +90,7 @@ export default class ContentPresenter {
     render(this.#mainContainersComponent, this.#filmsMainContainer.element);
     render(this.#cardsContainer, this.#mainContainersComponent.element);
     this.#renderFilterTitleView();
-
+    this.#renderExtraFilmsContainer();
     if (this.#isLoading) {
       this.#renderLoading();
       return;
@@ -126,6 +127,7 @@ export default class ContentPresenter {
     });
   }
 
+  // отрисовка заголовков ФИльтров. Отображается в случае если список выбранного фильтра пуст (оповещает юзера что фильтр пуст)
   #renderFilterTitleView = () => {
 
 
@@ -136,6 +138,7 @@ export default class ContentPresenter {
 
   };
 
+  // Подробное описание фильмов(появляется при клике на миниатюру с фильмом)
   #connectFilmsPopupPresenter = (card) => {
 
     if(this.#filmsPopupPresenter) {
@@ -154,6 +157,7 @@ export default class ContentPresenter {
     this.#filmsPopupPresenter.init(card);
   };
 
+  // Ранг юзера - отображается в верхнем правом углу
   #renderUserRang () {
     if (this.#userRangView) {
       remove(this.#userRangView);
@@ -196,6 +200,14 @@ export default class ContentPresenter {
 
   #renderCardsFilms = (cards) => cards.forEach((card) => this.#renderCardFilm(card));
 
+  // ExtraFilms
+  #renderExtraFilmsContainer = () => {
+    const extraFilmsDiv = new NewCardsFilmContainerView();
+    this.#extraFilmsContainer = new ExtraFilmsView();
+    render(this.#extraFilmsContainer, this.#filmsMainContainer.element);
+    render(extraFilmsDiv, this.#extraFilmsContainer.element);
+  };
+
   //очистка списка фильмов
   #clearBoard({resetRenderFilmsCount = false, resetSortType = false} = {}) {
     const taskCount = this.films.length;
@@ -208,6 +220,7 @@ export default class ContentPresenter {
     remove(this.#sortComponent);
     remove(this.#filterTitleView);
     remove(this.#loadingComponent);
+    remove(this.#extraFilmsContainer);
 
     if (resetRenderFilmsCount) {
       this.#arrayFilmsCount = FILMS_COUNT_PER_STEP;

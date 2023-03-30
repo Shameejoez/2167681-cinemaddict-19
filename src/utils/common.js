@@ -52,7 +52,6 @@ const sortDate = (a,b) => a.filmInfo.release.date > b.filmInfo.release.date ? -1
 
 const sortCommentsCount = (a,b) => a.comments.length > b.comments.length ? -1 : 1;
 
-// ФУНКЦИЯ КОТОРАЯ ВЫБИРАЕТ 2 ТОПОВЫХ ФИЛЬМА (ЕЩЕ НЕ ДОПИСАННА ЗАЕБАЛ МЕНЯ ЭТОТ ПРОЕКТ)
 const mostPopularRandomTwoElement = (sortedArray) => {
 
   for (let i = 0; i < sortedArray.length; i++) {
